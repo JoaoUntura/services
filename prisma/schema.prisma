@@ -1,0 +1,48 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model agendamentos {
+  id                    Int                     @id @default(autoincrement())
+  data_inicio           DateTime                @db.Timestamptz(6)
+  email                 String?
+  numero                String?
+  data_fim              DateTime?               @db.Timestamptz(6)
+  id_user               Int?
+  nome_cliente          String?
+  users                 users?                  @relation(fields: [id_user], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  agendamentos_servicos agendamentos_servicos[]
+}
+
+model servicos {
+  id                    Int                     @id @default(autoincrement())
+  nome                  String
+  id_user               Int?
+  tempo                 DateTime?               @db.Time(6)
+  preco                 Float?
+  agendamentos_servicos agendamentos_servicos[]
+  users                 users?                  @relation(fields: [id_user], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model users {
+  id           Int            @id @default(autoincrement())
+  email        String
+  active       Boolean        @default(false)
+  name         String?
+  agendamentos agendamentos[]
+  servicos     servicos[]
+}
+
+model agendamentos_servicos {
+  id             Int          @id @default(autoincrement())
+  id_agendamento Int
+  id_servicos    Int?
+  agendamentos   agendamentos @relation(fields: [id_agendamento], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  servicos       servicos?    @relation(fields: [id_servicos], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}

@@ -9,9 +9,22 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@devexpress/dx-react-core": "^4.0.9",
+    "@devexpress/dx-react-scheduler": "^4.0.9",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@fullcalendar/core": "^6.1.15",
+    "@fullcalendar/daygrid": "^6.1.15",
+    "@fullcalendar/react": "^6.1.15",
+    "@fullcalendar/timegrid": "^6.1.15",
+    "@prisma/client": "^6.0.1",
+    "date-fns": "^4.1.0",
+    "dayjs": "^1.11.13",
+    "next": "15.1.0",
+    "pg": "^8.13.1",
+    "prisma": "^6.0.1",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "next": "15.1.0"
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "postcss": "^8",
