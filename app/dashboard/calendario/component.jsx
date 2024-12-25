@@ -20,17 +20,23 @@ export default function Calendar({events}) {
     }
 
     return(
-    <div className='w-1/2 h-1/2'>
+    <div className='w-1/2 mt-14 shadow-lg rounded-lg'>
           <FullCalendar
       plugins={[ timeGridPlugin ]}
       initialView="timeGridWeek"
+      allDaySlot = {false}
       locale='pt'
       eventClick={handleEventClick}
       headerToolbar = {
-        {left: 'prev,next',
+        {left: 'prev,next,today',
         center: 'title',
         right: 'timeGridWeek,timeGridDay' }// user can switch between the two
       }
+      buttonText={{
+        today: 'Hoje',
+        timeGridWeek:'Semana',
+        timeGridDay:'Dia'
+      }}
        timeZone = 'UTC'
       events={formatedEvents}
     />

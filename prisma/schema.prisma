@@ -35,6 +35,8 @@ model users {
   email        String
   active       Boolean        @default(false)
   name         String?
+  inicio_dia   DateTime?      @db.Time(6)
+  fim_dia      DateTime?      @db.Time(6)
   agendamentos agendamentos[]
   servicos     servicos[]
 }

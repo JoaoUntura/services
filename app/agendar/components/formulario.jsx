@@ -2,8 +2,9 @@
 
 import { use, useState } from "react";
 import Modal from "./modal";
+import { getHorariosDia } from "@/app/funcs/getHorariosDia";
 
-export default function Formulario({servicos}){
+export default function Formulario({servicos, empresa}){
     
     const [servicoSelecionado, setServico] = useState([])
     const [modalOpen, setModalOpen] = useState(false)
@@ -75,10 +76,12 @@ export default function Formulario({servicos}){
             <input type="email" placeholder="Email" name='email' onChange={(e) => changeUserData("email", e.target.value)} className="mb-6 w-64 p-1"></input>
             <input type="tel" placeholder="Celular" name='numero' onChange={(e) => changeUserData("numero", e.target.value)} className="mb-6 w-64 p-1"></input>
 
-            <input type="datetime-local" placeholder="Data" name='data' onChange={(e) => {
+            <input type="date" placeholder="Data" name='data' onChange={async(e) => {
                 const localDate = new Date(e.target.value); // Data local do usuário
                 const utcDate = new Date(localDate.getTime() - localDate.getTimezoneOffset() * 60000); // Converte para UTC
-                changeUserData("data_inicio", utcDate.toISOString()); // Envia como ISO UTC
+                changeUserData("data_inicio", utcDate.toISOString()); 
+                console.log(await getHorariosDia(empresa, e.target.value, servicoSelecionado.map(s => (s.tempo))))
+
             }}  className="mb-6 w-64 p-1"></input>
 
 

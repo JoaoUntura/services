@@ -7,7 +7,7 @@ export default async function Page({params}){
 
     return(
        
-        <Formulario servicos={servicos.servicos}></Formulario>
+        <Formulario servicos={servicos.servicos} empresa={empresa}></Formulario>
 
     );
 
