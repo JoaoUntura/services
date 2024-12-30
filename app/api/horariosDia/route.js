@@ -21,8 +21,6 @@ export async function POST(request) {
     })
 
 
-   
-
     let {inicio_dia, fim_dia} = await prisma.users.findUnique({where:{id: parseInt(data.empresa)}, select : {inicio_dia:true, fim_dia:true}})
     inicio_dia = dayjs(inicio_dia).utc()
     fim_dia = dayjs(fim_dia).utc()
@@ -45,43 +43,55 @@ export async function POST(request) {
         data_inicio: 'asc',
         },
     });
+    
 
-
-
-   
     let intervalosLivres = []
 
-    for (let i = 0; i < horariosDia.length; i++){
-
-        if(i === 0){
-            intervalosLivres.push({start: inicio, end:dayjs(horariosDia[i].data_inicio).utc()})
-
-        }else if(i === horariosDia.length - 1){
-            if (dayjs(horariosDia[i].data_inicio).diff(horariosDia[i-1].data_fim, 'minutes') > 0){
-                intervalosLivres.push({start:dayjs(horariosDia[i-1].data_fim).utc(), end:dayjs(horariosDia[i].data_inicio).utc()})
+    if (horariosDia.length === 0) {
+        // Não há horários, todo o intervalo está livre
+        intervalosLivres.push({ start: inicio, end: fim });
+    } else if (horariosDia.length === 1) {
+        // Caso com apenas um horário
+        const unicoHorario = horariosDia[0];
+        intervalosLivres.push({ start: inicio, end: dayjs(unicoHorario.data_inicio).utc() });
+        intervalosLivres.push({ start: dayjs(unicoHorario.data_fim).utc(), end: fim });
+    } else {
+        // Caso com múltiplos horários
+        for (let i = 0; i < horariosDia.length; i++) {
+            if (i === 0) {
+                // Primeiro intervalo antes do primeiro horário
+                intervalosLivres.push({ start: inicio, end: dayjs(horariosDia[i].data_inicio).utc() });
             }
-      
-            intervalosLivres.push({start:dayjs(horariosDia[i].data_fim).utc(), end:fim})
-        }
-        
-        else{
-            if (dayjs(horariosDia[i].data_inicio).diff(horariosDia[i-1].data_fim, 'minutes') > 0){
-                intervalosLivres.push({start:dayjs(horariosDia[i-1].data_fim).utc(), end:dayjs(horariosDia[i].data_inicio).utc()})
+    
+            if (i > 0) {
+                // Intervalo entre o horário anterior e o atual
+                if (dayjs(horariosDia[i].data_inicio).diff(horariosDia[i - 1].data_fim, 'minutes') > 0) {
+                    intervalosLivres.push({
+                        start: dayjs(horariosDia[i - 1].data_fim).utc(),
+                        end: dayjs(horariosDia[i].data_inicio).utc()
+                    });
+                }
             }
-       
+    
+            if (i === horariosDia.length - 1) {
+                // Último intervalo após o último horário
+                intervalosLivres.push({ start: dayjs(horariosDia[i].data_fim).utc(), end: fim });
+            }
         }
-        
     }
+    
+
+    
 
     const minutesNeed = timeAcumulator.get('hour') * 60 + timeAcumulator.get('minute');
     let disponiveis = [];
-
+    console.log(intervalosLivres);
     for (let i = 0; i < intervalosLivres.length; i++){
-
-        if(intervalosLivres[i].end.diff(intervalosLivres[i].start , 'minutes') > minutesNeed){
+      
+        if(intervalosLivres[i].end.diff(intervalosLivres[i].start , 'minutes') >= minutesNeed){
 
             let possiveis = Math.floor(intervalosLivres[i].end.diff(intervalosLivres[i].start , 'minutes') / minutesNeed)
-     
+           
             disponiveis.push({data_inicio:intervalosLivres[i].start, data_fim:intervalosLivres[i].start.add(minutesNeed,'minutes')})
 
             if (possiveis > 1) {
@@ -95,8 +105,6 @@ export async function POST(request) {
             }
             
         }
-
-
     }
 
     return new Response(JSON.stringify(disponiveis),{

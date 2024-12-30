@@ -7,23 +7,9 @@ export async function POST(request) {
     const userData = data.userData
     const servicoSelecionado = data.servicoSelecionado
 
-   const final = new Date (userData.data_inicio); 
 
-    servicoSelecionado.map(d=>{
-
-      
-      const [horas, min] = formatarTempo(new Date(d.tempo));
-  
-      final.setHours(final.getHours() + horas);
-
-      final.setMinutes(final.getMinutes() + min);
-  
-
-    })
-
-
-    const agendamento = {...userData, data_fim:final.toISOString(), id_user:parseInt(servicoSelecionado[0].id_user)}
-    console.log(agendamento)
+    const agendamento = {...userData, id_user:parseInt(servicoSelecionado[0].id_user)}
+   
     const agendamentoDb = await prisma.agendamentos.create({data:agendamento})
   
 
@@ -33,7 +19,7 @@ export async function POST(request) {
 
     }))
 
-        return new Response({
+        return new Response(JSON.stringify(agendamentoDb.id), {
           status: 201,
           headers: { 'Content-Type': 'application/json' },
         });
@@ -41,10 +27,6 @@ export async function POST(request) {
     
 
 
-    function formatarTempo(dataHora) {
-      return dataHora.toISOString().slice(11, 16).split(':').map(Number); // Extrai "HH:MM" do formato ISO
-    }
-    
-
+  
 
 
