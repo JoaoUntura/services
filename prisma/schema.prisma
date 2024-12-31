@@ -37,6 +37,7 @@ model users {
   name         String?
   inicio_dia   DateTime?      @db.Time(6)
   fim_dia      DateTime?      @db.Time(6)
+  endereco     String?
   agendamentos agendamentos[]
   servicos     servicos[]
 }

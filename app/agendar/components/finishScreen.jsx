@@ -7,9 +7,9 @@ dayjs.extend(utc);
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 
-export default function FinishScreen({userData,codigoAgendamento}){
+export default function FinishScreen({userData,endereco, codigoAgendamento}){
 
-    const position = [-21.946324, -46.717932];
+    const position = endereco.split(",").map(Number);
 
     const handleClick = (plataform) => {
         if (plataform === 'waze'){
@@ -17,8 +17,6 @@ export default function FinishScreen({userData,codigoAgendamento}){
             window.open(wazeUrl, "_blank"); // Abre o Waze em uma nova aba ou no app
 
         }else if('google'){
-
-            
             const googleMapsUrl = `https://www.google.com/maps?q=${position[0]},${position[1]}`;
             window.open(googleMapsUrl, "_blank"); // Abre o Google Maps em uma nova aba ou no app
 

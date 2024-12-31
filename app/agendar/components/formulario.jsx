@@ -3,11 +3,11 @@ import Cards from "./cards";
 import {useState } from "react";
 import Modal from "./modal";
 import { getHorariosDia } from "@/app/funcs/getHorariosDia";
-import { postAgendamento } from "@/app/funcs/postAgendamento";
+import { postAgendamento } from "@/app/funcs/agendamentosCrud/postAgendamento";
 import FinishScreen from "./finishScreen";
 
 
-export default function Formulario({servicos, empresa}){  
+export default function Formulario({servicos, endereco, empresa}){  
     const [formCompleted, setForm] = useState(false)
     const [codigoAgendamento, setCodigo] = useState(null)
     const [horariosDisponives, setHorarios] = useState([])
@@ -137,7 +137,7 @@ export default function Formulario({servicos, empresa}){
             </div>
         } else if (isFinishScreen) {
             return <div className="pt-8 w-full flex flex-col justify-start items-center h-full">
-                    <FinishScreen userData={userData} codigoAgendamento={codigoAgendamento}></FinishScreen>
+                    <FinishScreen userData={userData} codigoAgendamento={codigoAgendamento} endereco={endereco}></FinishScreen>
                 </div>
               
         }

@@ -5,17 +5,25 @@ import FullCalendar from '@fullcalendar/react';
 import timeGridPlugin from '@fullcalendar/timegrid'; // Para visualização com horários
 import Modal from '@/app/agendar/components/modal';
 import { useState } from 'react';
+import { deleteAgendamento } from '@/app/funcs/agendamentosCrud/deleteAgendamento';
 
 export default function Calendar({events}) {
+    const [eventsData, setEvents] = useState(events)
     const [modalOpen, setModalOpen] = useState(false)
-    const [selectedEvent, setEvent] = useState(null)
+    const [selectedEvent, setEventSelected] = useState(null)
 
-    const formatedEvents = events.map(e => ({title: e.nome_cliente, start:e.data_inicio, end:e.data_fim, extendedProps: {numero:e.numero, email:e.email, servicos:e.agendamentos_servicos.map(s => (s.servicos.nome))}}))
-    console.log(formatedEvents)
+    const formatedEvents = eventsData.map(e => ({title: e.nome_cliente, start:e.data_inicio, end:e.data_fim, extendedProps: {codigo:e.id, numero:e.numero, email:e.email, servicos:e.agendamentos_servicos.map(s => (s.servicos.nome))}}))
+
+    const excluirAgendamento = async(id) => {
+      const response = await deleteAgendamento(id)
+      setEvents(prev => (prev.filter(e => e.id !== id )))
+      setModalOpen(false);
+
+    }
 
     const handleEventClick = (e) =>{
         setModalOpen(true)
-        setEvent(e.event)
+        setEventSelected(e.event)
         console.log(e.event)
     }
 
@@ -43,10 +51,13 @@ export default function Calendar({events}) {
       <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)}>
         {
           <div className='w-72 flex flex-col justify-center items-center'>
+            <p className='mb-2'>Código:  {selectedEvent?.extendedProps.codigo}</p>
             <p className='mb-2'>Número:  {selectedEvent?.extendedProps.numero}</p>
             <p className='mb-2'>Email:  {selectedEvent?.extendedProps.email}</p>
             <p className='mb-2' >Serviços: </p>
             {selectedEvent?.extendedProps?.servicos.map(s => (<p key={s}>{s}</p>))}
+            <button onClick={() => excluirAgendamento(selectedEvent?.extendedProps.codigo)}  className="text-white bg-red-700 px-10 py-3 rounded-lg mt-5">Deletar</button>  
+
           </div>
         }
 

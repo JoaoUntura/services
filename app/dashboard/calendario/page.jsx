@@ -1,9 +1,9 @@
 import Calendar from "./component";
-import { getHorarios } from "@/app/funcs/getHorarios";
+import { getAgendamentos } from "@/app/funcs/agendamentosCrud/getAgendamentos";
+
 
 export default async function Page(){
-    const events =  await getHorarios(1);
-
+    const events =  await getAgendamentos(1);
 
     return(
         <div className="w-full h-full flex flex-col items-center">
