@@ -33,6 +33,7 @@ export async function POST(request) {
     
     const horariosDia = await prisma.agendamentos.findMany({
         where: {
+        id: parseInt(data.empresa),
         data_inicio: {
             gte: inicio,
             lte: fim,
@@ -46,7 +47,7 @@ export async function POST(request) {
     
 
     let intervalosLivres = []
-
+    console.log(horariosDia)
     if (horariosDia.length === 0) {
         // Não há horários, todo o intervalo está livre
         intervalosLivres.push({ start: inicio, end: fim });

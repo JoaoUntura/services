@@ -1,9 +1,11 @@
 import { getServicos } from "@/app/funcs/servicosCrud/getServicosEmpresa";
 import TableServices from "./component";
+import { getUserId } from "@/app/auth/auth";
 
 
 export default async function Page(){
-    const services = await getServicos(1)
+    const userId = await getUserId()
+    const services = await getServicos(userId?.userId)
 
 
     return(

@@ -38,6 +38,7 @@ model users {
   inicio_dia   DateTime?      @db.Time(6)
   fim_dia      DateTime?      @db.Time(6)
   endereco     String?
+  senha        String?
   agendamentos agendamentos[]
   servicos     servicos[]
 }
@@ -46,6 +47,6 @@ model agendamentos_servicos {
   id             Int          @id @default(autoincrement())
   id_agendamento Int
   id_servicos    Int?
-  agendamentos   agendamentos @relation(fields: [id_agendamento], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  agendamentos   agendamentos @relation(fields: [id_agendamento], references: [id], onDelete: Cascade)
   servicos       servicos?    @relation(fields: [id_servicos], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
